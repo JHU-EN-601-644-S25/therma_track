@@ -4,6 +4,7 @@
 [Same App with Slack Back End]
 
 web app:
+
 frontend:
 1. run node -v, ensure the current version of node.js >= 20
 2. npm create vite@latest [app name]
@@ -13,6 +14,7 @@ frontend:
 6. cp [dir for React/web_app/*] src/
 7. npm install react-router-dom recharts (router is used for navigating between different pages, recharts is used for char display)
 8. npm run dev
+
 backend:
 1. cd BackEnd or cp [dir for React/Webapp/BackEnd/*] [dir for your backend folder/]
 2. pip install -r requirements.txt
