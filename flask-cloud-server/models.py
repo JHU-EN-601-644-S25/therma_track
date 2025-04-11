@@ -1,9 +1,7 @@
 from config_db import config_db
 from datetime import datetime, timedelta
 import random
-
-app, db = config_db()
-
+from db import db
 
 class User(db.Model):
     __tablename__ = "Users"  # Name of the table in the database
