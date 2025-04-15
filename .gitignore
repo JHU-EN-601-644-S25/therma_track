@@ -1,0 +1,7 @@
+React/app*
+*node_modules
+*package.json
+*package-lock.json
+*database
+*.db
+*__pycache__
