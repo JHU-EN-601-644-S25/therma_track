@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -11,8 +11,10 @@ import PopupComp from './PopupComp';
 import CustomButton from './CustomButton';
 import {API_BASE_URL} from './config_constants';
 import Utils from './utils';
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
 
-function DoctorPage({navigation, route}) {
+function DoctorPage({ route }: { route: any }) {
   const [connectPatient, setConnectPatient] = useState(false);
   const [checkPatient, setCheckPatient] = useState(false);
   const [patientId, setPatientId] = useState('');
@@ -20,6 +22,9 @@ function DoctorPage({navigation, route}) {
   const [patients, setPatients] = useState([]);
   const [errorMsg, setErrorMsg] = useState('');
   const [message, setMessage] = useState('');
+
+  const navigation = useNavigation<NativeStackNavigationProp<any>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);  
 
   const updatePatientList = async () => {
     try {
@@ -35,6 +40,16 @@ function DoctorPage({navigation, route}) {
 
   useEffect(() => {
     updatePatientList();
+  }, []);
+
+  useEffect(() => {
+    const logout = () => {
+      navigation.navigate("Login");
+    };
+    timerRef.current = setTimeout(logout, 15 * 60 * 1000);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, []);
 
   return (

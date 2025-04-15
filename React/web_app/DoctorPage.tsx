@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import utilsFuncs from "./utils";
 import PopupComp from "./PopupComp";
 import { useNavigate, useParams } from "react-router-dom";
@@ -30,6 +30,33 @@ function DoctorPage() {
   useEffect(() => {
     updatePatientList();
   }, []);
+
+  useEffect(() => {
+    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
+    const logoutAfterInactivity = () => {
+      timerRef.current = setTimeout(() => {
+        alert("Session timed out due to inactivity");
+        navigate("/");
+      }, 15 * 60 * 1000);
+    };
+  
+    const resetTimer = () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      logoutAfterInactivity();
+    };
+  
+    const events = ["mousemove", "keydown", "click"];
+    events.forEach((event) => window.addEventListener(event, resetTimer));
+  
+    logoutAfterInactivity(); 
+  
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
+    };
+  }, []);
+  
 
   return (
     <div

@@ -9,9 +9,12 @@ interface Props {
 }
 
 function PatientStatsComp({patient_id}: Props) {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<
+    { time_logged: Date; temp_data: number }[]
+  >([]);
   const [minDate, setMinDate] = useState('');
   const [maxDate, setMaxDate] = useState('');
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,8 +40,14 @@ function PatientStatsComp({patient_id}: Props) {
         const dates = recent_50_data.map(
           (d: {time_logged: Date}) => d.time_logged,
         );
-        setMinDate(new Date(Math.min(...dates)).toISOString().split('T')[0]);
-        setMaxDate(new Date(Math.max(...dates)).toISOString().split('T')[0]);
+
+        const min = Math.min(...dates.map(d => d.getTime()));
+        const max = Math.max(...dates.map(d => d.getTime())); 
+        //setMinDate(new Date(Math.min(...dates)).toISOString().split('T')[0]);
+        //setMaxDate(new Date(Math.max(...dates)).toISOString().split('T')[0]);
+
+        setMinDate(new Date(min).toISOString().split('T')[0]);
+        setMaxDate(new Date(max).toISOString().split('T')[0]);
         console.log(recent_50_data);
         setData(recent_50_data);
       } catch (error) {
@@ -107,6 +116,7 @@ function PatientStatsComp({patient_id}: Props) {
         />
       )}
     </View>
+    
   );
 }
 

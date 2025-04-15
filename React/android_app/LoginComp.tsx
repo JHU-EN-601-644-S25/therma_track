@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
-import {View, Text, TextInput, StyleSheet} from 'react-native';
+import {View, Text, TextInput, StyleSheet, Pressable} from 'react-native';
 import CustomButton from './CustomButton';
+
+
 
 interface Props {
   nameClass: string;
@@ -13,6 +15,8 @@ interface Props {
   ) => Promise<[boolean, string, {status: string; id: number}]>;
 }
 
+
+
 function LoginComp({
   nameClass,
   auxClass,
@@ -23,61 +27,55 @@ function LoginComp({
   const [name, setName] = useState('');
   const [aux, setAux] = useState('');
   const [error, setError] = useState('');
-  const [tries, setTries] = useState(0);
+  //const [tries, setTries] = useState(0);
+  
 
   return (
-    <View>
-      {tries >= 5 && (
-        <View>
-          <Text>Too many tries, please try again later</Text>
-        </View>
-      )}
-      {tries < 5 && (
-        <View style={styles.container}>
-          <View style={styles.inputContainer}>
-            <Text>{nameClass}: </Text>
-            <TextInput
-              style={styles.input}
-              value={name}
-              onChangeText={setName}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text>{auxClass}: </Text>
-            <TextInput
-              style={styles.input}
-              secureTextEntry={auxClass === 'password'}
-              value={aux}
-              onChangeText={setAux}
-            />
-          </View>
-          {error ? <Text style={styles.errorText}>{error}</Text> : null}
-          <CustomButton
-            onPress={async () => {
-              if (!name || !aux) {
-                setError('Incomplete information');
-                return;
-              }
-              const [result, errorMsg, aux_data] = await onAuxChecker(
-                name,
-                aux,
-              );
-              console.log([result, errorMsg, aux_data]);
-              if (!result) {
-                setError(errorMsg);
-                setTries(tries + 1);
-              } else {
-                setError('');
-                onLoginSubmit(errorMsg, aux_data);
-              }
-            }}
-            title={buttonText}
-            color="green"
+    <View style={styles.container}>
+      {nameClass && (
+        <View style={styles.inputContainer}>
+          <Text>{nameClass}:</Text>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={(text) => setName(text)}
+            placeholder={`Enter your ${nameClass}`}
           />
         </View>
       )}
+      {auxClass && (
+        <View style={styles.inputContainer}>
+          <Text>{auxClass}:</Text>
+          <TextInput
+            style={styles.input}
+            value={aux}
+            placeholder={`Enter your ${auxClass}`}
+            secureTextEntry={auxClass.toLowerCase() === "password"}
+            onChangeText={(text) => setAux(text)}
+          />
+        </View>
+      )}
+      {error && <Text style={styles.errorText}>{error}</Text>}
+      <Pressable
+        style={styles.button}
+        onPress={async () => {
+          if ((!nameClass && !name) || (!auxClass && !aux)) {
+            setError("Incomplete information");
+            return;
+          }
+          const [result, pageName, userObj] = await onAuxChecker(name, aux);
+          if (!result) {
+            setError(pageName);
+          } else {
+            setError("");
+            onLoginSubmit(pageName, userObj);
+          }
+        }}
+      >
+        <Text style={styles.buttonText}>{buttonText}</Text>
+      </Pressable>
     </View>
-  );
+  ); 
 }
 
 const styles = StyleSheet.create({

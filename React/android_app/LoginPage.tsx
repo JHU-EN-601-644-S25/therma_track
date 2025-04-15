@@ -2,8 +2,15 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import LoginComp from './LoginComp';
 import utils from './utils';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-function LoginPage({navigation, route}) {
+function LoginPage({
+  navigation,
+  route,
+}: {
+  navigation: NativeStackNavigationProp<any>;
+  route: any;
+}) {
   return (
     <View style={styles.container}>
       <LoginComp
@@ -11,10 +18,10 @@ function LoginPage({navigation, route}) {
         auxClass="password"
         buttonText="Login"
         onLoginSubmit={(identifier, aux) => {
-          console.log(identifier, aux);
-          navigation.navigate(identifier, aux);
+          console.log("Navigating to:", identifier, aux); 
+          (navigation as any).navigate(identifier, aux);
         }}
-        onAuxChecker={utils.handleLogin}
+        onAuxChecker={(name, aux) => utils.handleLogin(name, aux)}
       />
     </View>
   );

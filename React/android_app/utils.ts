@@ -23,7 +23,10 @@ const handleLogin = async (
       return [
         true,
         json_data.user_type === 1 ? 'Doctor' : 'Patient',
-        {status: 'p', id: json_data.id},
+        {
+          status: json_data.user_type === 1 ? 'd' : 'p',
+          id: json_data.id,
+        },
       ];
     } else {
       return [false, 'Login failed: ' + json_data.message, {status: '', id: 0}];

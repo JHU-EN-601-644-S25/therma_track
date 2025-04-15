@@ -49,7 +49,7 @@ function DoctorPage() {
     const events = ["mousemove", "keydown", "click"];
     events.forEach((event) => window.addEventListener(event, resetTimer));
   
-    logoutAfterInactivity(); // 初始化计时器
+    logoutAfterInactivity(); 
   
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
