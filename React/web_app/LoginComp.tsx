@@ -4,8 +4,15 @@ interface props {
   nameClass: string;
   auxClass: string;
   buttonText: string;
-  onLoginSubmit: (identifier: string) => void;
-  onAuxChecker: (name: string, aux: string) => Promise<[boolean, string]>;
+  onLoginSubmit: (
+    identifier: string,
+    patient_id: number,
+    image_src: string | null
+  ) => void;
+  onAuxChecker: (
+    name: string,
+    aux: string
+  ) => Promise<[boolean, string, number, string | null]>;
 }
 
 function LoginComp({
@@ -64,11 +71,16 @@ function LoginComp({
                 setError("Incomplete information");
                 return;
               }
-              const [result, errorMsg] = await onAuxChecker(name, aux);
+              const [result, errorMsg, user_id, qrcode] = await onAuxChecker(
+                name,
+                aux
+              );
               if (!result) {
                 setError(errorMsg);
                 setTries(tries + 1);
-              } else onLoginSubmit(errorMsg);
+              } else {
+                onLoginSubmit(errorMsg, user_id, qrcode);
+              }
             }}
           >
             {buttonText}

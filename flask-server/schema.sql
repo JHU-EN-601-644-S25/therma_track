@@ -4,7 +4,9 @@ CREATE TABLE IF NOT EXISTS Users (
     user_password TEXT NOT NULL,
     last_login TIMESTAMP NOT NULL,
     dob TIMESTAMP NOT NULL,
-    user_type INTEGER NOT NULL  -- 0 means patient, 1 means doctor
+    user_type INTEGER NOT NULL, -- 0 means patient, 1 means doctor
+    user_email TEXT NOT NULL,
+    user_secret TEXT
 );
 
 CREATE TABLE IF NOT EXISTS DoctorPatients (
@@ -16,7 +18,7 @@ CREATE TABLE IF NOT EXISTS DoctorPatients (
 CREATE TABLE IF NOT EXISTS Temperatures (
     patient_id INTEGER NOT NULL,
     device_id INTEGER NOT NULL,
-    time_logged TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    time_logged DEFAULT CURRENT_TIMESTAMP,
     temp_data FLOAT NOT NULL
 );
 

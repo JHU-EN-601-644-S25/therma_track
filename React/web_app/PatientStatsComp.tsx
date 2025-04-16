@@ -29,14 +29,15 @@ function PatientStatsComp({ patient_id }: Props) {
         const sorted_data = formatted_data
           .sort(
             (
-              a: { timestamp: string; temperature: number },
-              b: { timestamp: string; temperature: number }
+              a: { time_logged: string; temp_data: number },
+              b: { time_logged: string; temp_data: number }
             ) =>
-              new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+              new Date(a.time_logged).getTime() -
+              new Date(b.time_logged).getTime()
           )
-          .map((entry: { timestamp: string; temperature: number }) => ({
-            time_logged: new Date(entry.timestamp),
-            temp_data: entry.temperature,
+          .map((entry: { time_logged: string; temp_data: number }) => ({
+            time_logged: new Date(entry.time_logged),
+            temp_data: entry.temp_data,
           }));
         const recent_50_data = sorted_data.slice(-50);
         const dates = recent_50_data.map(

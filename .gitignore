@@ -5,3 +5,6 @@ React/app*
 *database
 *.db
 *__pycache__
+*/local
+local
+*/.env

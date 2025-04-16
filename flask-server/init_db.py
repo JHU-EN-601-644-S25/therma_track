@@ -1,6 +1,8 @@
 import sqlite3, hashlib, random
 from datetime import datetime, timedelta
 
+EMAIL = "zhihan.xia.2172@gmail.com"
+
 
 def random_timestamp(mode):
     """Generate a random timestamp between start_date and end_date."""
@@ -28,6 +30,7 @@ def initialize_patients(cursor):
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
+            EMAIL,
         ),
         (
             "happy_patient",
@@ -35,6 +38,7 @@ def initialize_patients(cursor):
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
+            EMAIL,
         ),
         (
             "stressed_patient",
@@ -42,6 +46,7 @@ def initialize_patients(cursor):
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
+            EMAIL,
         ),
         (
             "sleepy_patient",
@@ -49,10 +54,11 @@ def initialize_patients(cursor):
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
+            EMAIL,
         ),
     ]
     cursor.executemany(
-        "INSERT INTO Users (username, user_password, last_login, dob, user_type) VALUES (?, ?, ?, ?, ?);",
+        "INSERT INTO Users (username, user_password, last_login, dob, user_type, user_email) VALUES (?, ?, ?, ?, ?, ?);",
         patient_commands,
     )
 
@@ -65,6 +71,7 @@ def initialize_doctors(cursor):
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             1,
+            EMAIL,
         ),
         (
             "happy_doctor",
@@ -72,6 +79,7 @@ def initialize_doctors(cursor):
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             1,
+            EMAIL,
         ),
         (
             "stressed_doctor",
@@ -79,6 +87,7 @@ def initialize_doctors(cursor):
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             1,
+            EMAIL,
         ),
         (
             "sleepy_doctor",
@@ -86,10 +95,11 @@ def initialize_doctors(cursor):
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             1,
+            EMAIL,
         ),
     ]
     cursor.executemany(
-        "INSERT INTO Users (username, user_password, last_login, dob, user_type) VALUES (?, ?, ?, ?, ?);",
+        "INSERT INTO Users (username, user_password, last_login, dob, user_type, user_email) VALUES (?, ?, ?, ?, ?, ?);",
         doctor_commands,
     )
 

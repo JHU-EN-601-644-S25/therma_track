@@ -3,6 +3,7 @@ import utilsFuncs from "./utils";
 import PopupComp from "./PopupComp";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_BASE_URL } from "./config_constants";
+import PatientConnectVerificationComp from "./PatientConnectVerificationComp";
 
 function DoctorPage() {
   const { id } = useParams();
@@ -11,6 +12,8 @@ function DoctorPage() {
   const [patientId, setPatientId] = useState("");
   const [dob, setDob] = useState("");
   const [patients, setPatients] = useState([]);
+  const [verifier, setVerifier] = useState(false);
+  const [patientName, setPatientName] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
@@ -86,27 +89,50 @@ function DoctorPage() {
                 />
               </div>
               {error && <p style={{ color: "red" }}>{error}</p>}
-              {message && <p style={{ color: "green" }}>{message}</p>}
+              {!verifier && message && (
+                <p style={{ color: "green" }}>{message}</p>
+              )}
               <button
                 className="spaced"
                 onClick={async () => {
-                  const [result, errorMsg] =
-                    await utilsFuncs.parseConnectPatient(
+                  const [result, errorMsg, name] =
+                    await utilsFuncs.parseCheckPatient(
                       id ? id : "",
                       patientId,
                       dob
                     );
                   if (!result) setError(errorMsg);
                   else {
+                    setError("");
                     setMessage(
                       `successfully connected to patient ${patientId}`
                     );
-                    updatePatientList();
+                    setPatientName(name);
+                    setVerifier(true);
                   }
                 }}
               >
                 Connect
               </button>
+              {verifier && (
+                <div>
+                  <PatientConnectVerificationComp
+                    patient_name={patientName}
+                    set_verified_status={async (val) => {
+                      if (val) {
+                        await utilsFuncs.ConnectPatient(
+                          id ? id : "",
+                          patientId
+                        );
+                        updatePatientList();
+                      } else {
+                        setMessage("");
+                      }
+                      setVerifier(false);
+                    }}
+                  />
+                </div>
+              )}
             </div>
           }
         />

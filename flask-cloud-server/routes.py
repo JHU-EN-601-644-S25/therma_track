@@ -1,5 +1,7 @@
-import hashlib
+import hashlib, random, string
 from flask import Blueprint, request, jsonify
+from flask_security import auth_required
+from flask_mail import Mail, Message
 from sqlalchemy import text
 from config_db import config_db
 from datetime import datetime
@@ -9,7 +11,11 @@ from db import db
 router = Blueprint("router", __name__)
 DATABASE = "flask_database.db"
 
+
 def setup_routes(app):
+
+    mail = Mail(app)
+
     @app.route("/temperature/<int:patient_id>", methods=["GET"])
     def temperature(patient_id):
         try:
@@ -19,7 +25,10 @@ def setup_routes(app):
             result = db.session.execute(query, {"patient_id": patient_id})
             data = result.fetchall()
             return jsonify(
-                [{"timestamp": row[0].isoformat(), "temperature": row[1]} for row in data]
+                [
+                    {"timestamp": row[0].isoformat(), "temperature": row[1]}
+                    for row in data
+                ]
             )
         except Exception as e:
             print(e)
@@ -32,12 +41,16 @@ def setup_routes(app):
                 500,
             )
 
-
     @app.route("/login", methods=["POST"])
     def login_patient():
         data = request.get_json()
         username = data.get("username", "").strip()
         password = data.get("password", "").strip()
+
+        code = "".join(random.choices(string.digits, k=6))
+        msg = Message("Your 2FA Code", recipients=["zhihan.xia.2172@gmail.com"])
+        msg.body = f"Thank you for using Therma Track!\nYour 2FA code is: {code}"
+        mail.send(msg)
 
         try:
             # Fetch user details
@@ -47,16 +60,24 @@ def setup_routes(app):
 
             # the data is passed in with format (username, user_id, user_password, last_login, dob, user_type)
             if not user or hashlib.sha256(password.encode()).hexdigest() != user[2]:
-                return jsonify({"message": "Invalid username or password"}), 200
+                return (
+                    jsonify(
+                        {
+                            "message": "Invalid username or password",
+                            "id": None,
+                            "user_type": None,
+                        }
+                    ),
+                    200,
+                )
 
-            # user.last_login = datetime.now()
-            # db.session.commit()
-
-            return jsonify({"message": None, "id": user[0], "user_type": user[4]}), 200
+            return jsonify({"message": code, "id": user[0], "user_type": user[4]}), 200
         except Exception as e:
             print(f"Error at log in: {e}")
-            return jsonify({"message": "Database error"}), 500
-
+            return (
+                jsonify({"message": "Database error", "id": None, "user_type": None}),
+                200,
+            )
 
     @app.route("/doctor/check_patient/<int:doctor_id>", methods=["GET"])
     def doctor_check_patient(doctor_id):
@@ -75,7 +96,6 @@ def setup_routes(app):
             return jsonify(patient_data)
         except Exception:
             return jsonify({"message": "Database error"}), 500
-
 
     @app.route("/doctor/connect_patient", methods=["POST"])
     def doctor_add_patient():
@@ -117,7 +137,9 @@ def setup_routes(app):
             if connect_data is not None:
                 return jsonify({"message": "Patient already connected"}), 200
             with app.app_context():
-                db.session.add(DoctorPatient(doctor_id=doctor_id, patient_id=patient_id))
+                db.session.add(
+                    DoctorPatient(doctor_id=doctor_id, patient_id=patient_id)
+                )
             db.session.commit()
             return jsonify({"message": None}), 200
         except Exception as e:

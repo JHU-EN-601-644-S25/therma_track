@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import random
 from db import db
 
+
 class User(db.Model):
     __tablename__ = "Users"  # Name of the table in the database
 
@@ -36,7 +37,7 @@ class TempLog(db.Model):
     log_id = db.Column(db.Integer, primary_key=True)
     patient_id = db.Column(db.Integer, nullable=False)
     device_id = db.Column(db.Integer, nullable=False)
-    timestamp = db.Column(db.TIMESTAMP, nullable=False)
+    time_logged = db.Column(db.TIMESTAMP, nullable=False)
     temp_data = db.Column(db.Float, nullable=False)
 
     def __repr__(self):
