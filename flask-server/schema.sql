@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS Users (
     last_login TIMESTAMP NOT NULL,
     dob TIMESTAMP NOT NULL,
     user_type INTEGER NOT NULL, -- 0 means patient, 1 means doctor
+    failed_attempts INTEGER DEFAULT 0,
+    account_locked_until TEXT,
     user_email TEXT NOT NULL,
     user_secret TEXT
 );
@@ -19,7 +21,16 @@ CREATE TABLE IF NOT EXISTS Temperatures (
     patient_id INTEGER NOT NULL,
     device_id INTEGER NOT NULL,
     time_logged DEFAULT CURRENT_TIMESTAMP,
-    temp_data FLOAT NOT NULL
+    temp_data FLOAT NOT NULL,
+    hash_value TEXT
 );
 
+CREATE TABLE IF NOT EXISTS AuditLogs (
+  log_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER,
+  action TEXT NOT NULL,
+  status TEXT NOT NULL,
+  timestamp TEXT DEFAULT (datetime('now')),
+  details TEXT
+);
 

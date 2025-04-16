@@ -12,9 +12,10 @@ import { API_BASE_URL } from "./config_constants";
 
 interface Props {
   patient_id: string;
+  viewer_id: string;
 }
 
-function PatientStatsComp({ patient_id }: Props) {
+function PatientStatsComp({ patient_id, viewer_id }: Props) {
   const [data, setData] = useState([]);
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
@@ -22,22 +23,29 @@ function PatientStatsComp({ patient_id }: Props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const temp_data = await fetch(
-          `${API_BASE_URL}/temperature/${patient_id}`
-        );
+        const temp_data = await fetch(`${API_BASE_URL}/temperature`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            patient_id: patient_id,
+            viewer_id: viewer_id,
+          }),
+        });
         const formatted_data = await temp_data.json();
+        console.log(formatted_data);
         const sorted_data = formatted_data
           .sort(
             (
-              a: { time_logged: string; temp_data: number },
-              b: { time_logged: string; temp_data: number }
+              a: { timestamp: string; temperature: number },
+              b: { timestamp: string; temperature: number }
             ) =>
-              new Date(a.time_logged).getTime() -
-              new Date(b.time_logged).getTime()
+              new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
           )
-          .map((entry: { time_logged: string; temp_data: number }) => ({
-            time_logged: new Date(entry.time_logged),
-            temp_data: entry.temp_data,
+          .map((entry: { timestamp: string; temperature: number }) => ({
+            time_logged: new Date(entry.timestamp),
+            temp_data: entry.temperature,
           }));
         const recent_50_data = sorted_data.slice(-50);
         const dates = recent_50_data.map(

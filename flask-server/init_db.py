@@ -1,4 +1,4 @@
-import sqlite3, hashlib, random
+import sqlite3, hashlib, random, bcrypt
 from datetime import datetime, timedelta
 
 EMAIL = "zhihan.xia.2172@gmail.com"
@@ -26,7 +26,8 @@ def initialize_patients(cursor):
     patient_commands = [
         (
             "sad_patient",
-            hashlib.sha256("sad".encode()).hexdigest(),
+            bcrypt.hashpw("sad".encode(), bcrypt.gensalt()).decode(),
+            # hashlib.sha256("sad".encode()).hexdigest(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
@@ -34,7 +35,8 @@ def initialize_patients(cursor):
         ),
         (
             "happy_patient",
-            hashlib.sha256("happy".encode()).hexdigest(),
+            bcrypt.hashpw("happy".encode(), bcrypt.gensalt()).decode(),
+            # hashlib.sha256("happy".encode()).hexdigest(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
@@ -42,7 +44,8 @@ def initialize_patients(cursor):
         ),
         (
             "stressed_patient",
-            hashlib.sha256("stressed".encode()).hexdigest(),
+            bcrypt.hashpw("stressed".encode(), bcrypt.gensalt()).decode(),
+            # hashlib.sha256("stressed".encode()).hexdigest(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
@@ -50,7 +53,8 @@ def initialize_patients(cursor):
         ),
         (
             "sleepy_patient",
-            hashlib.sha256("sleepy".encode()).hexdigest(),
+            bcrypt.hashpw("sleepy".encode(), bcrypt.gensalt()).decode(),
+            # hashlib.sha256("sleepy".encode()).hexdigest(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
@@ -67,7 +71,8 @@ def initialize_doctors(cursor):
     doctor_commands = [
         (
             "sad_doctor",
-            hashlib.sha256("sad".encode()).hexdigest(),
+            bcrypt.hashpw("sad".encode(), bcrypt.gensalt()).decode(),
+            # hashlib.sha256("sad".encode()).hexdigest(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             1,
@@ -75,7 +80,8 @@ def initialize_doctors(cursor):
         ),
         (
             "happy_doctor",
-            hashlib.sha256("happy".encode()).hexdigest(),
+            bcrypt.hashpw("happy".encode(), bcrypt.gensalt()).decode(),
+            # hashlib.sha256("happy".encode()).hexdigest(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             1,
@@ -83,7 +89,8 @@ def initialize_doctors(cursor):
         ),
         (
             "stressed_doctor",
-            hashlib.sha256("stressed".encode()).hexdigest(),
+            bcrypt.hashpw("stressed".encode(), bcrypt.gensalt()).decode(),
+            # hashlib.sha256("stressed".encode()).hexdigest(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             1,
@@ -91,7 +98,8 @@ def initialize_doctors(cursor):
         ),
         (
             "sleepy_doctor",
-            hashlib.sha256("sleepy".encode()).hexdigest(),
+            bcrypt.hashpw("sleepy".encode(), bcrypt.gensalt()).decode(),
+            # hashlib.sha256("sleepy".encode()).hexdigest(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             1,
@@ -110,18 +118,23 @@ def initialize_temperatures(cursor):
     # ensure some has more than 50 instances
     for _ in range(205):
         random_patient = random.randint(1, 4)
-        random_temperature = random.randint(35, 42)
+        random_temperature = float(random.randint(35, 42))
+        random_ts = random_timestamp(mode="")
+        print(f"{random_ts}|{random_temperature}|{random_patient}")
         data.append(
             (
                 random_patient,
                 random_patient,
                 random_temperature,
-                random_timestamp(mode=""),
+                random_ts,
+                hashlib.sha256(
+                    f"{random_ts}|{random_temperature}|{random_patient}".encode()
+                ).hexdigest(),
             )
         )
 
     cursor.executemany(
-        "INSERT INTO Temperatures (patient_id, device_id, temp_data, time_logged) VALUES (?, ?, ?, ?);",
+        "INSERT INTO Temperatures (patient_id, device_id, temp_data, time_logged, hash_value) VALUES (?, ?, ?, ?, ?);",
         data,
     )
 
