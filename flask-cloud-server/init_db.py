@@ -2,8 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text, inspect
 from config_db import config_db
-from datetime import datetime, timedelta
-import hashlib, random
+from datetime import datetime, timedelta, timezone
+import hashlib, random, bcrypt
 from models import User, TempLog
 
 
@@ -25,35 +25,35 @@ def random_timestamp(mode):
     random_time = start + timedelta(
         seconds=random.randint(0, int((end - start).total_seconds()))
     )
-    return random_time.strftime("%Y-%m-%d %H:%M:%S")
+    return random_time.replace(tzinfo=timezone.utc)
 
 
 def initialize_patients():
     patient_commands = [
         (
             "sad_patient",
-            hashlib.sha256("sad".encode()).hexdigest(),
+            bcrypt.hashpw("sad".encode(), bcrypt.gensalt()).decode(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
         ),
         (
             "happy_patient",
-            hashlib.sha256("happy".encode()).hexdigest(),
+            bcrypt.hashpw("happy".encode(), bcrypt.gensalt()).decode(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
         ),
         (
             "stressed_patient",
-            hashlib.sha256("stressed".encode()).hexdigest(),
+            bcrypt.hashpw("stressed".encode(), bcrypt.gensalt()).decode(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
         ),
         (
             "sleepy_patient",
-            hashlib.sha256("sleepy".encode()).hexdigest(),
+            bcrypt.hashpw("sleepy".encode(), bcrypt.gensalt()).decode(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
@@ -78,28 +78,28 @@ def initialize_doctors():
     doctor_commands = [
         (
             "sad_doctor",
-            hashlib.sha256("sad".encode()).hexdigest(),
+            bcrypt.hashpw("sad".encode(), bcrypt.gensalt()).decode(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             1,
         ),
         (
             "happy_doctor",
-            hashlib.sha256("happy".encode()).hexdigest(),
+            bcrypt.hashpw("happy".encode(), bcrypt.gensalt()).decode(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             1,
         ),
         (
             "stressed_doctor",
-            hashlib.sha256("stressed".encode()).hexdigest(),
+            bcrypt.hashpw("stressed".encode(), bcrypt.gensalt()).decode(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             1,
         ),
         (
             "sleepy_doctor",
-            hashlib.sha256("sleepy".encode()).hexdigest(),
+            bcrypt.hashpw("sleepy".encode(), bcrypt.gensalt()).decode(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             1,
