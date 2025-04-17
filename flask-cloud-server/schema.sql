@@ -20,16 +20,4 @@ CREATE TABLE IF NOT EXISTS Temperatures (
     temp_data FLOAT NOT NULL
 );
 
-CREATE TABLE AuditLogs (
-    log_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    action TEXT NOT NULL,
-    status TEXT NOT NULL,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    details TEXT
-);
-
-
-ALTER TABLE Users ADD COLUMN failed_attempts INT DEFAULT 0;
-ALTER TABLE Users ADD COLUMN account_locked_until TIMESTAMP NULL;
 

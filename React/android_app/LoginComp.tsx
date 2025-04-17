@@ -1,8 +1,6 @@
-import React, {useState} from 'react';
-import {View, Text, TextInput, StyleSheet, Pressable} from 'react-native';
-import CustomButton from './CustomButton';
-
-
+import React, { useState } from "react";
+import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
+import CustomButton from "./CustomButton";
 
 interface Props {
   nameClass: string;
@@ -11,11 +9,9 @@ interface Props {
   onLoginSubmit: (identifier: string, aux: object) => void;
   onAuxChecker: (
     name: string,
-    aux: string,
-  ) => Promise<[boolean, string, {status: string; id: number}]>;
+    aux: string
+  ) => Promise<[boolean, string, { status: string; id: number }]>;
 }
-
-
 
 function LoginComp({
   nameClass,
@@ -24,11 +20,10 @@ function LoginComp({
   onLoginSubmit,
   onAuxChecker,
 }: Props) {
-  const [name, setName] = useState('');
-  const [aux, setAux] = useState('');
-  const [error, setError] = useState('');
+  const [name, setName] = useState("");
+  const [aux, setAux] = useState("");
+  const [error, setError] = useState("");
   //const [tries, setTries] = useState(0);
-  
 
   return (
     <View style={styles.container}>
@@ -75,40 +70,40 @@ function LoginComp({
         <Text style={styles.buttonText}>{buttonText}</Text>
       </Pressable>
     </View>
-  ); 
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   inputContainer: {
     marginVertical: 10,
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     width: 200,
   },
   errorText: {
-    color: 'red',
+    color: "red",
     marginTop: 10,
   },
   button: {
-    backgroundColor: '#007bff',
+    backgroundColor: "#007bff",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     marginTop: 20,
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
 });

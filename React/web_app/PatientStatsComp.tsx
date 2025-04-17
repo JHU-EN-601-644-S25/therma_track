@@ -12,9 +12,10 @@ import { API_BASE_URL } from "./config_constants";
 
 interface Props {
   patient_id: string;
+  viewer_id: string;
 }
 
-function PatientStatsComp({ patient_id }: Props) {
+function PatientStatsComp({ patient_id, viewer_id }: Props) {
   const [data, setData] = useState([]);
   const [minDate, setMinDate] = useState("");
   const [maxDate, setMaxDate] = useState("");
@@ -22,10 +23,18 @@ function PatientStatsComp({ patient_id }: Props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const temp_data = await fetch(
-          `${API_BASE_URL}/temperature/${patient_id}`
-        );
+        const temp_data = await fetch(`${API_BASE_URL}/temperature`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            patient_id: patient_id,
+            viewer_id: viewer_id,
+          }),
+        });
         const formatted_data = await temp_data.json();
+        console.log(formatted_data);
         const sorted_data = formatted_data
           .sort(
             (

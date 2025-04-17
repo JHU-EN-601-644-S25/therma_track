@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import utilsFuncs from "./utils";
 import PopupComp from "./PopupComp";
 import { useNavigate, useParams } from "react-router-dom";
 import { API_BASE_URL } from "./config_constants";
+import PatientConnectVerificationComp from "./PatientConnectVerificationComp";
 
 function DoctorPage() {
   const { id } = useParams();
@@ -11,9 +12,14 @@ function DoctorPage() {
   const [patientId, setPatientId] = useState("");
   const [dob, setDob] = useState("");
   const [patients, setPatients] = useState([]);
+  const [verifier, setVerifier] = useState(false);
+  const [patientName, setPatientName] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+  
+  console.log("DoctorPage loaded, id =", id);
+
 
   const updatePatientList = async () => {
     try {
@@ -27,36 +33,15 @@ function DoctorPage() {
     }
   };
 
+  const handleViewLogs = () => {
+    console.log("View Logs clicked");
+    navigate("/logs", { state: { doctorId: id } });
+  };
+
+
   useEffect(() => {
     updatePatientList();
   }, []);
-
-  useEffect(() => {
-    const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  
-    const logoutAfterInactivity = () => {
-      timerRef.current = setTimeout(() => {
-        alert("Session timed out due to inactivity");
-        navigate("/");
-      }, 15 * 60 * 1000);
-    };
-  
-    const resetTimer = () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      logoutAfterInactivity();
-    };
-  
-    const events = ["mousemove", "keydown", "click"];
-    events.forEach((event) => window.addEventListener(event, resetTimer));
-  
-    logoutAfterInactivity(); 
-  
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      events.forEach((event) => window.removeEventListener(event, resetTimer));
-    };
-  }, []);
-  
 
   return (
     <div
@@ -82,6 +67,13 @@ function DoctorPage() {
         >
           Check Patient
         </button>
+        
+        <button
+          className="spaced"
+          onClick={handleViewLogs}>View Logs
+        </button>
+        
+
       </div>
       {connectPatient && (
         <PopupComp
@@ -113,27 +105,50 @@ function DoctorPage() {
                 />
               </div>
               {error && <p style={{ color: "red" }}>{error}</p>}
-              {message && <p style={{ color: "green" }}>{message}</p>}
+              {!verifier && message && (
+                <p style={{ color: "green" }}>{message}</p>
+              )}
               <button
                 className="spaced"
                 onClick={async () => {
-                  const [result, errorMsg] =
-                    await utilsFuncs.parseConnectPatient(
+                  const [result, errorMsg, name] =
+                    await utilsFuncs.parseCheckPatient(
                       id ? id : "",
                       patientId,
                       dob
                     );
                   if (!result) setError(errorMsg);
                   else {
+                    setError("");
                     setMessage(
                       `successfully connected to patient ${patientId}`
                     );
-                    updatePatientList();
+                    setPatientName(name);
+                    setVerifier(true);
                   }
                 }}
               >
                 Connect
               </button>
+              {verifier && (
+                <div>
+                  <PatientConnectVerificationComp
+                    patient_name={patientName}
+                    set_verified_status={async (val) => {
+                      if (val) {
+                        await utilsFuncs.ConnectPatient(
+                          id ? id : "",
+                          patientId
+                        );
+                        updatePatientList();
+                      } else {
+                        setMessage("");
+                      }
+                      setVerifier(false);
+                    }}
+                  />
+                </div>
+              )}
             </div>
           }
         />

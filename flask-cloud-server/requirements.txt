@@ -2,3 +2,10 @@ flask-cors
 SQLAlchemy
 Flask-SQLAlchemy
 mysql-connector-python
+python-dotenv
+pycryptodomex
+flask-security[common,mfa,fsqla]
+Flask-Mail
+pyotp 
+qrcode[pil]
+bcrypt

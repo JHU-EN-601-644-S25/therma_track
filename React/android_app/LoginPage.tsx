@@ -1,8 +1,8 @@
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import LoginComp from './LoginComp';
-import utils from './utils';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import LoginComp from "./LoginComp";
+import utils from "./utils";
+import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 function LoginPage({
   navigation,
@@ -18,7 +18,7 @@ function LoginPage({
         auxClass="password"
         buttonText="Login"
         onLoginSubmit={(identifier, aux) => {
-          console.log("Navigating to:", identifier, aux); 
+          console.log("Navigating to:", identifier, aux);
           (navigation as any).navigate(identifier, aux);
         }}
         onAuxChecker={(name, aux) => utils.handleLogin(name, aux)}
@@ -30,14 +30,14 @@ function LoginPage({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
   },
   signupText: {
-    textDecorationLine: 'underline',
-    textDecorationColor: 'blue',
-    cursor: 'pointer',
+    textDecorationLine: "underline",
+    textDecorationColor: "blue",
+    cursor: "pointer",
     marginTop: 20,
   },
 });
