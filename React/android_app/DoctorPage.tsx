@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -6,22 +6,27 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
-} from "react-native";
-import PopupComp from "./PopupComp";
-import CustomButton from "./CustomButton";
-import { API_BASE_URL } from "./config_constants";
-import Utils from "./utils";
-import type { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useNavigation } from "@react-navigation/native";
+} from 'react-native';
+import PopupComp from './PopupComp';
+import CustomButton from './CustomButton';
+import {API_BASE_URL} from './config_constants';
+import utils from './utils';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useNavigation} from '@react-navigation/native';
+import PatientConnectVerificationComp from './PatientConnectVerificationComp';
 
-function DoctorPage({ route }: { route: any }) {
+function DoctorPage({route}: {route: any}) {
+  const {viewer_id} = route.params;
+
   const [connectPatient, setConnectPatient] = useState(false);
   const [checkPatient, setCheckPatient] = useState(false);
-  const [patientId, setPatientId] = useState("");
-  const [dob, setDob] = useState("");
+  const [patientId, setPatientId] = useState('');
+  const [dob, setDob] = useState('');
   const [patients, setPatients] = useState([]);
-  const [errorMsg, setErrorMsg] = useState("");
-  const [message, setMessage] = useState("");
+  const [errorMsg, setErrorMsg] = useState('');
+  const [message, setMessage] = useState('');
+  const [verifier, setVerifier] = useState(false);
+  const [patientName, setPatientName] = useState('');
 
   const navigation = useNavigation<NativeStackNavigationProp<any>>();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -29,12 +34,11 @@ function DoctorPage({ route }: { route: any }) {
   const updatePatientList = async () => {
     try {
       const patient_list = await fetch(
-        `${API_BASE_URL}/doctor/check_patient/${route.params.id}`
+        `${API_BASE_URL}/doctor/check_patient/${viewer_id}`,
       );
-      const json_data = await patient_list.json();
-      setPatients(json_data);
+      setPatients(await patient_list.json());
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
 
@@ -44,9 +48,9 @@ function DoctorPage({ route }: { route: any }) {
 
   useEffect(() => {
     const logout = () => {
-      navigation.navigate("Login");
+      navigation.navigate('Login');
     };
-    timerRef.current = setTimeout(logout, 15 * 60 * 1000);
+    timerRef.current = setTimeout(logout, 1 * 60 * 1000);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
@@ -67,8 +71,8 @@ function DoctorPage({ route }: { route: any }) {
           onPress={() => {
             setCheckPatient(true);
             setConnectPatient(false);
-            setMessage("");
-            setErrorMsg("");
+            setMessage('');
+            setErrorMsg('');
           }}
           title="Check Patient"
           color="gray"
@@ -99,20 +103,39 @@ function DoctorPage({ route }: { route: any }) {
             <CustomButton
               title="Connect"
               onPress={async () => {
-                const [success, msg] = await Utils.parseConnectPatient(
-                  route.params.id.toString(),
+                const [success, msg, name] = await utils.parseCheckPatient(
+                  route.params.viewer_id.toString(),
                   patientId,
-                  dob
+                  dob,
                 );
                 if (success) {
-                  setMessage(`Patient ${patientId} connected successfully`);
-                  updatePatientList();
+                  setErrorMsg('');
+                  //  setMessage(`successfully connected to patient ${patientId}`);
+                  setPatientName(name);
+                  setVerifier(true);
                 } else {
                   setErrorMsg(msg);
                 }
               }}
               color="green"
             />
+            {verifier && (
+              <PatientConnectVerificationComp
+                patient_name={patientName}
+                set_verified_status={async val => {
+                  if (val) {
+                    await utils.ConnectPatient(viewer_id, patientId);
+                    setMessage(
+                      `successfully connected to patient ${patientName}`,
+                    );
+                    updatePatientList();
+                  } else {
+                    setMessage('');
+                  }
+                  setVerifier(false);
+                }}
+              />
+            )}
           </View>
         </PopupComp>
       )}
@@ -121,19 +144,19 @@ function DoctorPage({ route }: { route: any }) {
         <PopupComp onClose={() => setCheckPatient(false)}>
           <FlatList
             data={patients}
-            keyExtractor={(item: { patient_id: string; username: string }) =>
+            keyExtractor={(item: {patient_id: string; username: string}) =>
               item.patient_id
             }
-            renderItem={({ item }) => (
+            renderItem={({item}) => (
               <TouchableOpacity
                 style={styles.patientItem}
                 onPress={() =>
-                  navigation.navigate("Patient", {
-                    status: "d",
-                    id: Number(item.patient_id),
+                  navigation.navigate('Patient', {
+                    status: 'd',
+                    viewer_id: viewer_id,
+                    patient_id: Number(item.patient_id),
                   })
-                }
-              >
+                }>
                 <Text style={styles.patientName}>{item.username}</Text>
               </TouchableOpacity>
             )}
@@ -152,23 +175,23 @@ function DoctorPage({ route }: { route: any }) {
 
 const styles = StyleSheet.create({
   errorText: {
-    color: "red",
+    color: 'red',
   },
   messageText: {
-    color: "green",
+    color: 'green',
   },
   inputOuterContainer: {
     padding: 20,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   inputContainer: {
     marginVertical: 10,
   },
   input: {
     height: 40,
-    borderColor: "gray",
+    borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
@@ -177,17 +200,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#f5f5f5", // Light gray background for a soft look
+    backgroundColor: '#f5f5f5', // Light gray background for a soft look
   },
   buttonContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 20, // Add spacing between buttons
   },
   popupContainer: {
     marginTop: 20,
     padding: 16,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 8,
     elevation: 3, // Shadow for Android
   },
@@ -198,17 +221,17 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 8,
-    backgroundColor: "#f1f1f1",
+    backgroundColor: '#f1f1f1',
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#ddd",
-    flexDirection: "row",
-    alignItems: "center",
+    borderColor: '#ddd',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   patientName: {
     fontSize: 16,
-    fontWeight: "600",
-    color: "#333",
+    fontWeight: '600',
+    color: '#333',
   },
 });
 

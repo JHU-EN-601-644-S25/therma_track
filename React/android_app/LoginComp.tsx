@@ -1,16 +1,26 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
-import CustomButton from "./CustomButton";
+import React, {useState} from 'react';
+import {View, Text, TextInput, StyleSheet} from 'react-native';
+// Pressable
+import CustomButton from './CustomButton';
 
 interface Props {
   nameClass: string;
   auxClass: string;
   buttonText: string;
-  onLoginSubmit: (identifier: string, aux: object) => void;
+  onLoginSubmit: (
+    identifier: string,
+    aux: {status: string; viewer_id: number; patient_id: number},
+    image_src: string | null,
+  ) => void;
   onAuxChecker: (
     name: string,
-    aux: string
-  ) => Promise<[boolean, string, { status: string; id: number }]>;
+    aux: string,
+  ) => Promise<[boolean, string, {status: string; id: number}, string | null]>;
+  // onLoginSubmit: (identifier: string, aux: object) => void;
+  // onAuxChecker: (
+  //   name: string,
+  //   aux: string
+  // ) => Promise<[boolean, string, { status: string; id: number }]>;
 }
 
 function LoginComp({
@@ -20,10 +30,9 @@ function LoginComp({
   onLoginSubmit,
   onAuxChecker,
 }: Props) {
-  const [name, setName] = useState("");
-  const [aux, setAux] = useState("");
-  const [error, setError] = useState("");
-  //const [tries, setTries] = useState(0);
+  const [name, setName] = useState('');
+  const [aux, setAux] = useState('');
+  const [error, setError] = useState('');
 
   return (
     <View style={styles.container}>
@@ -33,7 +42,7 @@ function LoginComp({
           <TextInput
             style={styles.input}
             value={name}
-            onChangeText={(text) => setName(text)}
+            onChangeText={text => setName(text)}
             placeholder={`Enter your ${nameClass}`}
           />
         </View>
@@ -45,30 +54,60 @@ function LoginComp({
             style={styles.input}
             value={aux}
             placeholder={`Enter your ${auxClass}`}
-            secureTextEntry={auxClass.toLowerCase() === "password"}
-            onChangeText={(text) => setAux(text)}
+            secureTextEntry={auxClass.toLowerCase() === 'password'}
+            onChangeText={text => setAux(text)}
           />
         </View>
       )}
       {error && <Text style={styles.errorText}>{error}</Text>}
-      <Pressable
-        style={styles.button}
+      <CustomButton
+        title={buttonText}
+        color="green"
         onPress={async () => {
           if ((!nameClass && !name) || (!auxClass && !aux)) {
-            setError("Incomplete information");
+            setError('Incomplete information');
             return;
           }
-          const [result, pageName, userObj] = await onAuxChecker(name, aux);
+          const [result, pageName, userObj, qrStr] = await onAuxChecker(
+            name,
+            aux,
+          );
           if (!result) {
             setError(pageName);
           } else {
-            setError("");
-            onLoginSubmit(pageName, userObj);
+            setError('');
+            onLoginSubmit(
+              pageName,
+              {
+                status: userObj.status,
+                viewer_id: userObj.id,
+                patient_id: pageName === 'Patient' ? userObj.id : -1,
+              },
+              qrStr,
+            );
           }
         }}
-      >
+      />
+      {/* <Pressable
+        style={styles.button}
+        onPress={async () => {
+          if ((!nameClass && !name) || (!auxClass && !aux)) {
+            setError('Incomplete information');
+            return;
+          }
+          const [result, pageName, userObj, qrStr] = await onAuxChecker(
+            name,
+            aux,
+          );
+          if (!result) {
+            setError(pageName);
+          } else {
+            setError('');
+            onLoginSubmit(pageName, userObj, qrStr);
+          }
+        }}>
         <Text style={styles.buttonText}>{buttonText}</Text>
-      </Pressable>
+      </Pressable> */}
     </View>
   );
 }
@@ -76,36 +115,36 @@ function LoginComp({
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   inputContainer: {
     marginVertical: 10,
   },
   input: {
     height: 40,
-    borderColor: "gray",
+    borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     width: 200,
   },
   errorText: {
-    color: "red",
+    color: 'red',
     marginTop: 10,
   },
-  button: {
-    backgroundColor: "#007bff",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-  },
+  // button: {
+  //   backgroundColor: '#007bff',
+  //   paddingVertical: 10,
+  //   paddingHorizontal: 20,
+  //   borderRadius: 5,
+  //   marginTop: 20,
+  // },
+  // buttonText: {
+  //   color: 'white',
+  //   fontSize: 16,
+  // },
 });
 
 export default LoginComp;
