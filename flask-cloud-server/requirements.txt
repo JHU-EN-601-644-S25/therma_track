@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 flask==2.3.3
 flask-cors==4.0.0
 SQLAlchemy==2.0.25
@@ -11,3 +12,16 @@ pyotp==2.9.0
 qrcode[pil]==7.4.2
 bcrypt==4.1.2
 email-validator==2.1.0.post1
+=======
+flask-cors
+SQLAlchemy
+Flask-SQLAlchemy
+mysql-connector-python
+python-dotenv
+pycryptodomex
+flask-security[common,mfa,fsqla]
+Flask-Mail
+pyotp 
+qrcode[pil]
+bcrypt
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2

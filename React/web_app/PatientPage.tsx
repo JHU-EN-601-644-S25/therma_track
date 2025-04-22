@@ -13,7 +13,11 @@ function PatientPage() {
       timerRef.current = setTimeout(() => {
         alert("Session timed out due to inactivity");
         navigate("/");
+<<<<<<< HEAD
       }, 15 * 60 * 1000);
+=======
+      }, 1 * 60 * 1000);
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
     };
 
     const resetTimer = () => {

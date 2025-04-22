@@ -1,5 +1,9 @@
 from config_db import config_db
+<<<<<<< HEAD
 from datetime import datetime, timedelta, timezone
+=======
+from datetime import datetime, timedelta
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
 import random
 from db import db
 
@@ -11,11 +15,17 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     user_password = db.Column(db.Text, nullable=False)
+<<<<<<< HEAD
     last_login = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     user_type = db.Column(db.Integer, nullable=False)
     dob = db.Column(db.DateTime(timezone=True), nullable=False)
     failed_attempts = db.Column(db.Integer, default=0)
     account_locked_until = db.Column(db.DateTime, nullable=True)
+=======
+    last_login = db.Column(db.TIMESTAMP, default=datetime.now(), nullable=False)
+    user_type = db.Column(db.Integer, nullable=False)
+    dob = db.Column(db.TIMESTAMP, nullable=False)
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
 
     def __repr__(self):
         return f"<User {self.username}>"
@@ -39,6 +49,7 @@ class TempLog(db.Model):
     log_id = db.Column(db.Integer, primary_key=True)
     patient_id = db.Column(db.Integer, nullable=False)
     device_id = db.Column(db.Integer, nullable=False)
+<<<<<<< HEAD
     time_logged = db.Column(db.DateTime(timezone=True), nullable=False)
     temp_data = db.Column(db.Float, nullable=False)
     hash_value = db.Column(db.String(255), nullable=True)
@@ -59,3 +70,10 @@ class AuditLog(db.Model):
     
     def __repr__(self):
         return f"<AuditLog {self.log_id} {self.user_id}>"
+=======
+    time_logged = db.Column(db.TIMESTAMP, nullable=False)
+    temp_data = db.Column(db.Float, nullable=False)
+
+    def __repr__(self):
+        return f"<TempLog {self.patient_id} {self.device_id}: {self.temp_data}>"
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2

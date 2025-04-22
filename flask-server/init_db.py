@@ -1,7 +1,11 @@
 import sqlite3, hashlib, random, bcrypt
 from datetime import datetime, timedelta
 
+<<<<<<< HEAD
 EMAIL = "fjr174646@gmail.com"
+=======
+EMAIL = "zhihan.xia.2172@gmail.com"
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
 
 
 def random_timestamp(mode):

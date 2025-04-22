@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { useState, useEffect } from "react";
+=======
+import { useState, useEffect, useRef } from "react";
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
 import utilsFuncs from "./utils";
 import PopupComp from "./PopupComp";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,9 +21,37 @@ function DoctorPage() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
+<<<<<<< HEAD
   
   console.log("DoctorPage loaded, id =", id);
 
+=======
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const logoutAfterInactivity = () => {
+      timerRef.current = setTimeout(() => {
+        alert("Session timed out due to inactivity");
+        navigate("/");
+      }, 1 * 60 * 1000);
+    };
+
+    const resetTimer = () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      logoutAfterInactivity();
+    };
+
+    const events = ["mousemove", "keydown", "click"];
+    events.forEach((event) => window.addEventListener(event, resetTimer));
+
+    logoutAfterInactivity();
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
+    };
+  }, []);
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
 
   const updatePatientList = async () => {
     try {
@@ -33,12 +65,15 @@ function DoctorPage() {
     }
   };
 
+<<<<<<< HEAD
   const handleViewLogs = () => {
     console.log("View Logs clicked");
     navigate("/logs", { state: { doctorId: id } });
   };
 
 
+=======
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
   useEffect(() => {
     updatePatientList();
   }, []);
@@ -67,6 +102,7 @@ function DoctorPage() {
         >
           Check Patient
         </button>
+<<<<<<< HEAD
         
         <button
           className="spaced"
@@ -74,6 +110,8 @@ function DoctorPage() {
         </button>
         
 
+=======
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
       </div>
       {connectPatient && (
         <PopupComp

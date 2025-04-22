@@ -4,4 +4,12 @@ React/app*
 *package-lock.json
 *database
 *.db
+<<<<<<< HEAD
 *__pycache__
+=======
+*__pycache__
+*/local
+local
+*/.env
+*/network/
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2

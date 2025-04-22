@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import hashlib, random, string, bcrypt, csv
 from flask import Blueprint, request, jsonify, Response
 #from flask_security import auth_required
@@ -8,6 +9,17 @@ from datetime import datetime, timedelta, timezone
 from models import DoctorPatient, AuditLog
 from db import db
 from io import StringIO
+=======
+import hashlib, random, string
+from flask import Blueprint, request, jsonify
+from flask_security import auth_required
+from flask_mail import Mail, Message
+from sqlalchemy import text
+from config_db import config_db
+from datetime import datetime
+from models import DoctorPatient
+from db import db
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
 
 router = Blueprint("router", __name__)
 DATABASE = "flask_database.db"
@@ -15,6 +27,7 @@ DATABASE = "flask_database.db"
 
 def setup_routes(app):
 
+<<<<<<< HEAD
     #mail = Mail(app)
     app.register_blueprint(router)
     
@@ -26,11 +39,15 @@ def setup_routes(app):
         except Exception as e:
             print(f"[AUDIT LOGGING ERROR]: {e}")
             
+=======
+    mail = Mail(app)
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
 
     @app.route("/temperature/<int:patient_id>", methods=["GET"])
     def temperature(patient_id):
         try:
             query = text(
+<<<<<<< HEAD
                 "SELECT timestamp, temp_data, hash_value FROM Temperature WHERE patient_id = :patient_id"
             )
             result = db.session.execute(query, {"patient_id": patient_id})
@@ -45,6 +62,18 @@ def setup_routes(app):
                         "temperature": temp
                     })
             return jsonify(response)    
+=======
+                "SELECT timestamp, temp_data FROM Temperature WHERE patient_id = :patient_id"
+            )
+            result = db.session.execute(query, {"patient_id": patient_id})
+            data = result.fetchall()
+            return jsonify(
+                [
+                    {"timestamp": row[0].isoformat(), "temperature": row[1]}
+                    for row in data
+                ]
+            )
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
         except Exception as e:
             print(e)
             return (
@@ -55,7 +84,10 @@ def setup_routes(app):
                 ),
                 500,
             )
+<<<<<<< HEAD
             
+=======
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
 
     @app.route("/login", methods=["POST"])
     def login_patient():
@@ -63,10 +95,17 @@ def setup_routes(app):
         username = data.get("username", "").strip()
         password = data.get("password", "").strip()
 
+<<<<<<< HEAD
         #code = "".join(random.choices(string.digits, k=6))
         #msg = Message("Your 2FA Code", recipients=["zhihan.xia.2172@gmail.com"])
         #msg.body = f"Thank you for using Therma Track!\nYour 2FA code is: {code}"
         #mail.send(msg)
+=======
+        code = "".join(random.choices(string.digits, k=6))
+        msg = Message("Your 2FA Code", recipients=["zhihan.xia.2172@gmail.com"])
+        msg.body = f"Thank you for using Therma Track!\nYour 2FA code is: {code}"
+        mail.send(msg)
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
 
         try:
             # Fetch user details
@@ -75,6 +114,7 @@ def setup_routes(app):
             user = result.fetchone()
 
             # the data is passed in with format (username, user_id, user_password, last_login, dob, user_type)
+<<<<<<< HEAD
             if not user:
                 log_audit(None, "attempts login", "fail", f"invalid username: {username}")
                 return (jsonify({"message": "Invalid username or password"}),200,)
@@ -141,6 +181,27 @@ def setup_routes(app):
         except Exception as e:
             print(f"Error at log in: {e}")
             return (jsonify({"message": "Database error"}),500)
+=======
+            if not user or hashlib.sha256(password.encode()).hexdigest() != user[2]:
+                return (
+                    jsonify(
+                        {
+                            "message": "Invalid username or password",
+                            "id": None,
+                            "user_type": None,
+                        }
+                    ),
+                    200,
+                )
+
+            return jsonify({"message": code, "id": user[0], "user_type": user[4]}), 200
+        except Exception as e:
+            print(f"Error at log in: {e}")
+            return (
+                jsonify({"message": "Database error", "id": None, "user_type": None}),
+                200,
+            )
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
 
     @app.route("/doctor/check_patient/<int:doctor_id>", methods=["GET"])
     def doctor_check_patient(doctor_id):
@@ -208,6 +269,7 @@ def setup_routes(app):
         except Exception as e:
             print(e)
             return jsonify({"message": "Database error"}), 500
+<<<<<<< HEAD
         
         
     @router.route("/logs", methods=["GET"])
@@ -256,3 +318,5 @@ def setup_routes(app):
         response = Response(output.getvalue(), mimetype="text/csv")
         response.headers["Content-Disposition"] = "attachment; filename=audit_logs.csv"
         return response
+=======
+>>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
