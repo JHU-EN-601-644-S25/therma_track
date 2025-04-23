@@ -13,7 +13,7 @@ web app:
 7. npm install react-router-dom recharts (router is used for navigating between different pages, recharts is used for char display)
 8. npm run dev
 
-**No longer supports**
+(**No longer supports**)
 android app (Expo):
 
 1. npx create-expo-app [app name] --template blank-typescript
@@ -38,7 +38,7 @@ android app (Pure React Native, uses Android Studio Emulator):
 9. open Android Studio VM device
 10. npm run android
 
-**No longer supports**
+(**No longer supports**)
 node.js backend:
 
 1. cd node-sever
