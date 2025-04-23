@@ -13,6 +13,7 @@ web app:
 7. npm install react-router-dom recharts (router is used for navigating between different pages, recharts is used for char display)
 8. npm run dev
 
+**No longer supports**
 android app (Expo):
 
 1. npx create-expo-app [app name] --template blank-typescript
@@ -23,7 +24,8 @@ android app (Expo):
 6. **IMPORTANT** Before starting, use "ipconfig" command to check the laptop networks's currently assigned ip address and change the API_BASE_URL in config_constants.ts. Otherwise the Expo Go app would not be able to fetch the data!!
 7. npx expo start
 
-android app (Pure React Native, uses Android Studio Emulator)
+
+android app (Pure React Native, uses Android Studio Emulator):
 
 1. npx @react-native-community/cli@latest init <app_name>
 2. cd <app_name>
@@ -36,7 +38,8 @@ android app (Pure React Native, uses Android Studio Emulator)
 9. open Android Studio VM device
 10. npm run android
 
-node.js backend
+**No longer supports**
+node.js backend:
 
 1. cd node-sever
 2. npm init
@@ -44,13 +47,13 @@ node.js backend
 4. npm install body-parser cors express sqlite3
 5. npm start
 
-flask backend
+flask backend:
 
 1. cd flask-server
 2. python init_db.py --> initialize the database with default values
 3. python app.py --> start the server
 
-flask cloud backend
+flask cloud backend:
 
 1. cd flask-cloud-server
 2. python app.py
