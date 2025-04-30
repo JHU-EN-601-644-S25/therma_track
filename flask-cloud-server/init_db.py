@@ -5,7 +5,6 @@ from models import User, TempLog
 
 app, db = config_db()
 
-
 def random_timestamp(mode):
     """Generate a random timestamp between start_date and end_date."""
     if mode == "init_user":
@@ -20,7 +19,7 @@ def random_timestamp(mode):
     random_time = start + timedelta(
         seconds=random.randint(0, int((end - start).total_seconds()))
     )
-    return random_time.replace(tzinfo=timezone.utc)
+    return random_time
 
 
 def initialize_patients():
@@ -136,6 +135,7 @@ def initialize_temperatures():
 
     with app.app_context():
         for instance in data:
+            print(f"{instance[3]}|{instance[2]:.2f}|{instance[0]}".encode())
             db.session.add(
                 TempLog(
                     patient_id=instance[0],
@@ -143,7 +143,7 @@ def initialize_temperatures():
                     temp_data=instance[2],
                     time_logged=instance[3],
                     hash_value=hashlib.sha256(
-                    f"{random_ts}|{random_temperature}|{random_patient}".encode()
+                    f"{instance[3]}|{instance[2]:.2f}|{instance[0]}".encode()
                 ).hexdigest(),
                 )
             )
@@ -151,6 +151,6 @@ def initialize_temperatures():
 
 
 if __name__ == "__main__":
-    # initialize_patients()
-    # initialize_doctors()
+    initialize_patients()
+    initialize_doctors()
     initialize_temperatures()

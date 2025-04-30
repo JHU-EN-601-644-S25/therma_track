@@ -39,15 +39,14 @@ def setup_routes(app):
                 viewer_id, "view_temperature", "success", f"Viewed patient {patient_id}")
             except Exception as e:
                 print("[AUDIT ERROR]", e)
-
+            
             result = db.session.execute(query, {"patient_id": patient_id})
             data = result.fetchall()
             response = []
             for row in data:
                 ts, temp, stored_hash = row
-                expected = hashlib.sha256(f"{ts}|{temp}|{patient_id}".encode()).hexdigest()
-                # if stored_hash == expected:
-                if True:
+                expected = hashlib.sha256(f"{ts}|{temp:.2f}|{patient_id}".encode()).hexdigest()
+                if stored_hash == expected:
                     response.append({
                         "timestamp": ts.isoformat(),
                         "temperature": temp
