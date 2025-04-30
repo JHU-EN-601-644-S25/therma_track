@@ -19,6 +19,11 @@ function DoctorPage() {
   const navigate = useNavigate();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const handleViewLogs = () => {
+    console.log("View Logs clicked");
+    navigate("/logs", { state: { doctorId: id } });
+  };
+
   useEffect(() => {
     const logoutAfterInactivity = () => {
       timerRef.current = setTimeout(() => {
@@ -188,6 +193,9 @@ function DoctorPage() {
           }
         />
       )}
+      <button
+      className="spaced"
+      onClick={handleViewLogs}>View Logs</button>
       <button className="spaced" onClick={() => navigate("/")}>
         Log out
       </button>

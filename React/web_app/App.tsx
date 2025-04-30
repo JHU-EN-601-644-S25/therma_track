@@ -7,6 +7,7 @@ import {
 import LoginPage from "./LoginPage";
 import PatientPage from "./PatientPage";
 import DoctorPage from "./DoctorPage";
+import LogsPage from "./LogsPage";
 import "./App.css";
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/" element={<LoginPage />} />
         <Route path="/patient/:status/:id" element={<PatientPage />} />
         <Route path="/doctor/:id" element={<DoctorPage />} />
+        <Route path="/logs" element={<LogsPage />} />
         {/* Default Route: Any undefined route will navigate to /home */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
