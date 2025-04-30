@@ -19,12 +19,5 @@ def config_db():
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-    app.config["MAIL_SERVER"] = "smtp.gmail.com"
-    app.config["MAIL_PORT"] = 587
-    app.config["MAIL_USE_TLS"] = True
-    app.config["MAIL_USERNAME"] = os.getenv("TWOFACTOR_MAIL_USERNAME")
-    app.config["MAIL_PASSWORD"] = os.getenv("TWOFACTOR_MAIL_PASSWORD")
-    app.config["MAIL_DEFAULT_SENDER"] = app.config["MAIL_USERNAME"]
-
     db.init_app(app)
-    return app
+    return app, db
