@@ -31,7 +31,7 @@ def setup_routes(app):
             
         try:
             query = text(
-                "SELECT time_logged, temp_data, hash_value FROM Temperature WHERE patient_id = :patient_id"
+                "SELECT timestamp, temperature FROM Temperature WHERE patient_id = :patient_id"
             )
 
             try:
@@ -42,15 +42,10 @@ def setup_routes(app):
             
             result = db.session.execute(query, {"patient_id": patient_id})
             data = result.fetchall()
-            response = []
-            for row in data:
-                ts, temp, stored_hash = row
-                expected = hashlib.sha256(f"{ts}|{temp:.2f}|{patient_id}".encode()).hexdigest()
-                if stored_hash == expected:
-                    response.append({
-                        "timestamp": ts.isoformat(),
-                        "temperature": temp
-                    })
+            response = [{
+                    "timestamp": ts.isoformat(),
+                    "temperature": temp
+                } for (ts, temp) in data if ts]
             return jsonify(response)    
         except Exception as e:
             return (
