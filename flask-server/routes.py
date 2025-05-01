@@ -37,10 +37,22 @@ def temperature():
             expected = hashlib.sha256(f"{ts}|{temp}|{patient_id}".encode()).hexdigest()
             if stored_hash == expected:
                 result.append({"timestamp": ts, "temperature": temp})
+            else:
+                try:
+                    log_audit(
+                    viewer_id,
+                    "view_temperature",
+                    "failed",
+                    f"data corrupted",
+                )
+                except Exception as e:
+                    print("[AUDIT ERROR]", e)
+                
 
         return jsonify(result)
 
     except sqlite3.Error:
+        
         return (
             jsonify(
                 {

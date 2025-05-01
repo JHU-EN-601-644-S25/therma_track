@@ -2,13 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text, inspect
 from config_db import config_db
-<<<<<<< HEAD
-from datetime import datetime, timedelta, timezone
-import hashlib, random, bcrypt
-=======
 from datetime import datetime, timedelta
 import hashlib, random
->>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
 from models import User, TempLog
 
 
@@ -30,55 +25,35 @@ def random_timestamp(mode):
     random_time = start + timedelta(
         seconds=random.randint(0, int((end - start).total_seconds()))
     )
-<<<<<<< HEAD
-    return random_time.replace(tzinfo=timezone.utc)
-=======
-    return random_time.strftime("%Y-%m-%d %H:%M:%S")
->>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
+    return random_time.replace(tzinfo=timezone.u c)
 
 
 def initialize_patients():
     patient_commands = [
         (
             "sad_patient",
-<<<<<<< HEAD
             bcrypt.hashpw("sad".encode(), bcrypt.gensalt()).decode(),
-=======
-            hashlib.sha256("sad".encode()).hexdigest(),
->>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
         ),
         (
             "happy_patient",
-<<<<<<< HEAD
             bcrypt.hashpw("happy".encode(), bcrypt.gensalt()).decode(),
-=======
-            hashlib.sha256("happy".encode()).hexdigest(),
->>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
         ),
         (
             "stressed_patient",
-<<<<<<< HEAD
             bcrypt.hashpw("stressed".encode(), bcrypt.gensalt()).decode(),
-=======
-            hashlib.sha256("stressed".encode()).hexdigest(),
->>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,
         ),
         (
             "sleepy_patient",
-<<<<<<< HEAD
             bcrypt.hashpw("sleepy".encode(), bcrypt.gensalt()).decode(),
-=======
-            hashlib.sha256("sleepy".encode()).hexdigest(),
->>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
             0,

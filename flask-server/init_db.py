@@ -1,11 +1,9 @@
 import sqlite3, hashlib, random, bcrypt
 from datetime import datetime, timedelta
+from sqlalchemy import text
 
-<<<<<<< HEAD
-EMAIL = "fjr174646@gmail.com"
-=======
-EMAIL = "zhihan.xia.2172@gmail.com"
->>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
+
+EMAIL = "djr174646@gmail.com"
 
 
 def random_timestamp(mode):
@@ -68,7 +66,9 @@ def initialize_patients(cursor):
     cursor.executemany(
         "INSERT INTO Users (username, user_password, last_login, dob, user_type, user_email) VALUES (?, ?, ?, ?, ?, ?);",
         patient_commands,
+        
     )
+  
 
 
 def initialize_doctors(cursor):
@@ -136,6 +136,15 @@ def initialize_temperatures(cursor):
                 ).hexdigest(),
             )
         )
+    corrupted_timestamp = "2025-04-18 00:00:00"
+    corrupted_entry = (
+        1,  # patient_id
+        1,  # device_id
+        42.0,
+        corrupted_timestamp,
+        "this-is-a-fake-hash-value"
+    )
+    data.append(corrupted_entry)
 
     cursor.executemany(
         "INSERT INTO Temperatures (patient_id, device_id, temp_data, time_logged, hash_value) VALUES (?, ?, ?, ?, ?);",
@@ -154,6 +163,8 @@ def init_db():
         initialize_doctors(cursor)
         initialize_temperatures(cursor)
         connection.commit()
+        
+
 
 
 if __name__ == "__main__":

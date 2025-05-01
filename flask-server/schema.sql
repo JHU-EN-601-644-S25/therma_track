@@ -34,7 +34,3 @@ CREATE TABLE IF NOT EXISTS AuditLogs (
   details TEXT
 );
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
