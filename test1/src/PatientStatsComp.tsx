@@ -23,7 +23,7 @@ function PatientStatsComp({ patient_id, viewer_id }: Props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const temp_data = await fetch(`${API_BASE_URL}/temperature`, {
+        const temperature = await fetch(`${API_BASE_URL}/temperature`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -33,8 +33,14 @@ function PatientStatsComp({ patient_id, viewer_id }: Props) {
             viewer_id: viewer_id,
           }),
         });
-        const formatted_data = await temp_data.json();
+        console.log(typeof patient_id, typeof viewer_id)
+
+        const formatted_data = await temperature.json();
         console.log(formatted_data);
+        if (!Array.isArray(formatted_data)) {
+          console.error("Expected array but got:", formatted_data);
+          return;
+        }
         const sorted_data = formatted_data
           .sort(
             (
@@ -44,12 +50,12 @@ function PatientStatsComp({ patient_id, viewer_id }: Props) {
               new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
           )
           .map((entry: { timestamp: string; temperature: number }) => ({
-            time_logged: new Date(entry.timestamp),
-            temp_data: entry.temperature,
+            timestamp: new Date(entry.timestamp),
+            temperature: entry.temperature,
           }));
         const recent_50_data = sorted_data.slice(-50);
         const dates = recent_50_data.map(
-          (d: { time_logged: Date }) => d.time_logged
+          (d: { timestamp: Date }) => d.timestamp
         );
         setMinDate(new Date(Math.min(...dates)).toISOString().split("T")[0]);
         setMaxDate(new Date(Math.max(...dates)).toISOString().split("T")[0]);
@@ -64,7 +70,7 @@ function PatientStatsComp({ patient_id, viewer_id }: Props) {
   }, [patient_id]);
 
   const temp_datas = data.map(
-    (entry: { time_logged: Date; temp_data: number }) => entry.temp_data
+    (entry: { timestamp: Date; temperature: number }) => entry.temperature
   );
 
   // Ensure there is valid data
@@ -83,7 +89,7 @@ function PatientStatsComp({ patient_id, viewer_id }: Props) {
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="time_logged"
+              dataKey="timestamp"
               tickFormatter={(value) =>
                 value.toLocaleTimeString([], {
                   hour: "2-digit",
@@ -100,7 +106,7 @@ function PatientStatsComp({ patient_id, viewer_id }: Props) {
             <Tooltip />
             <Line
               type="monotone"
-              dataKey="temp_data"
+              dataKey="temperature"
               stroke="#ff7300"
               strokeWidth={2}
               dot={{ r: 4 }}
