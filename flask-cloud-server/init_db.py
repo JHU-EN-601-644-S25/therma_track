@@ -1,14 +1,9 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import text, inspect
 from config_db import config_db
-from datetime import datetime, timedelta
-import hashlib, random
+from datetime import datetime, timedelta, timezone
+import random, bcrypt, hashlib
 from models import User, TempLog
 
-
 app, db = config_db()
-
 
 def random_timestamp(mode):
     """Generate a random timestamp between start_date and end_date."""
@@ -17,7 +12,6 @@ def random_timestamp(mode):
     elif mode == "dob":
         start_date, end_date = "1950-01-01", "2002-01-01"
     else:
-        # data generated within 3 days
         start_date, end_date = "2025-02-01", "2025-02-03"
 
     start = datetime.strptime(start_date, "%Y-%m-%d")
@@ -25,7 +19,7 @@ def random_timestamp(mode):
     random_time = start + timedelta(
         seconds=random.randint(0, int((end - start).total_seconds()))
     )
-    return random_time.replace(tzinfo=timezone.u c)
+    return random_time
 
 
 def initialize_patients():
@@ -35,28 +29,28 @@ def initialize_patients():
             bcrypt.hashpw("sad".encode(), bcrypt.gensalt()).decode(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
-            0,
+            0,0,
         ),
         (
             "happy_patient",
             bcrypt.hashpw("happy".encode(), bcrypt.gensalt()).decode(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
-            0,
+            0, 0,
         ),
         (
             "stressed_patient",
             bcrypt.hashpw("stressed".encode(), bcrypt.gensalt()).decode(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
-            0,
+            0, 0,
         ),
         (
             "sleepy_patient",
             bcrypt.hashpw("sleepy".encode(), bcrypt.gensalt()).decode(),
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
-            0,
+            0, 0,
         ),
     ]
 
@@ -69,6 +63,7 @@ def initialize_patients():
                     last_login=patient_data[2],
                     dob=patient_data[3],
                     user_type=patient_data[4],
+                    failed_attempts=patient_data[5]
                 )
             )
         db.session.commit()
@@ -78,47 +73,31 @@ def initialize_doctors():
     doctor_commands = [
         (
             "sad_doctor",
-<<<<<<< HEAD
             bcrypt.hashpw("sad".encode(), bcrypt.gensalt()).decode(),
-=======
-            hashlib.sha256("sad".encode()).hexdigest(),
->>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
-            1,
+            1, 0,
         ),
         (
             "happy_doctor",
-<<<<<<< HEAD
             bcrypt.hashpw("happy".encode(), bcrypt.gensalt()).decode(),
-=======
-            hashlib.sha256("happy".encode()).hexdigest(),
->>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
-            1,
+            1, 0,
         ),
         (
             "stressed_doctor",
-<<<<<<< HEAD
             bcrypt.hashpw("stressed".encode(), bcrypt.gensalt()).decode(),
-=======
-            hashlib.sha256("stressed".encode()).hexdigest(),
->>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
-            1,
+            1, 0,
         ),
         (
             "sleepy_doctor",
-<<<<<<< HEAD
             bcrypt.hashpw("sleepy".encode(), bcrypt.gensalt()).decode(),
-=======
-            hashlib.sha256("sleepy".encode()).hexdigest(),
->>>>>>> 622d976407e07a875787ab88a0eaeaaff501a4f2
             random_timestamp(mode="init_user"),
             random_timestamp(mode="dob"),
-            1,
+            1, 0,
         ),
     ]
 
@@ -131,6 +110,7 @@ def initialize_doctors():
                     last_login=doctor_data[2],
                     dob=doctor_data[3],
                     user_type=doctor_data[4],
+                    failed_attempts=doctor_data[5],
                 )
             )
         db.session.commit()
@@ -142,24 +122,29 @@ def initialize_temperatures():
     # ensure some has more than 50 instances
     for _ in range(205):
         random_patient = random.randint(1, 4)
-        random_temperature = random.randint(35, 42)
+        random_temperature = float(random.randint(35, 42))
+        random_ts = random_timestamp(mode="")
         data.append(
             (
                 random_patient,
                 random_patient,
                 random_temperature,
-                random_timestamp(mode=""),
+                random_ts,
             )
         )
 
     with app.app_context():
         for instance in data:
+            print(f"{instance[3]}|{instance[2]:.2f}|{instance[0]}".encode())
             db.session.add(
                 TempLog(
                     patient_id=instance[0],
                     device_id=instance[1],
                     temp_data=instance[2],
-                    timestamp=instance[3],
+                    time_logged=instance[3],
+                    hash_value=hashlib.sha256(
+                    f"{instance[3]}|{instance[2]:.2f}|{instance[0]}".encode()
+                ).hexdigest(),
                 )
             )
         db.session.commit()
