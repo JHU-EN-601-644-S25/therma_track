@@ -2,7 +2,7 @@
 
 ## Opening web and android app
 
-web app:
+Web App:
 
 1. run node -v, ensure the current version of node.js >= 20
 2. npm create vite@latest [app name]
@@ -14,7 +14,7 @@ web app:
 8. npm run dev
 
 
-android app (Pure React Native, uses Android Studio Emulator):
+Android App (Pure React Native, uses Android Studio Emulator):
 
 1. npx @react-native-community/cli@latest init <app_name>
 2. cd <app_name>
@@ -23,18 +23,18 @@ android app (Pure React Native, uses Android Studio Emulator):
 5. npm install react-native-chart-kit (for patient temperature data visualization)
 6. npm install react-native-svg (dependencies for char kit)
 7. cp [dir for React/android_app/*] .
-8. **IMPORTANT** Before starting, use "ipconfig" command to check the laptop networks's currently assigned ip address and change the API_BASE_URL in config_constants.ts. Otherwise the Expo Go app would not be able to fetch the data!!
+8. **IMPORTANT** Before starting, use "ipconfig" command to check the laptop networks's currently assigned ip address and change the API_BASE_URL in config_constants.ts. Otherwise the app would not be able to fetch the data!!
 9. open Android Studio and run VM device (Recommend Android version 15)
 10. npm run android
 
 
-flask backend:
+Flask backend (Local version of app, used for functionality test):
 
 1. cd flask-server
 2. python init_db.py --> initialize the database with default values
 3. python app.py --> start the server
 
-flask cloud backend:
+Flask cloud backend (Mainly used):
 
 1. cd flask-cloud-server
 2. Create .env file in the flask-cloud-server/
