@@ -1,12 +1,15 @@
 # therma_track
+## Project Overview
+
+Therma Track is a cross-platform temperature monitoring app for patients. It allows users to monitor patient vitals in real-time through both web and mobile applications.
 
 ## Opening web and android app
 
 [clone the main branch]
 
-Web App:
+Web App (Vite + React + TypeScript)
 ```
-1. run node -v, ensure the current version of node.js >= 20
+1. run node -v, ensure the current version of Node.js >= 20
 2. npm create vite@latest [app name]
 3. when being prompted the framework, choose React + Typescript
 4. cd [app name]
@@ -16,7 +19,7 @@ Web App:
 8. npm run dev
 ```
 
-Android App (Pure React Native, uses Android Studio Emulator):
+Android App (React Native + Android Studio)
 ```
 1. npx @react-native-community/cli@latest init <app_name>
 2. cd <app_name>
@@ -41,6 +44,6 @@ Flask cloud backend (Mainly used):
 ```
 1. cd flask-cloud-server
 2. Create .env file in the flask-cloud-server/
-3. pip install requirements.txt
+3. pip install -r requirements.txt
 4. python app.py 
 ```
