@@ -1,13 +1,13 @@
-# therma_track
+# Therma_track
 ## Project Overview
 
 Therma Track is a cross-platform temperature monitoring app for patients. It allows users to monitor patient vitals in real-time through both web and mobile applications.
 
-## Opening web and android app
+## Opening the Web and Android app
 
-[clone the main branch]
+[Please download the app from the main branch]
 
-Web App (Vite + React + TypeScript)
+Web App (Vite + React + TypeScript):
 ```
 1. run node -v, ensure the current version of Node.js >= 20
 2. npm create vite@latest [app name]
@@ -19,7 +19,7 @@ Web App (Vite + React + TypeScript)
 8. npm run dev
 ```
 
-Android App (React Native + Android Studio)
+Android App (React Native + Android Studio):
 ```
 1. npx @react-native-community/cli@latest init <app_name>
 2. cd <app_name>
