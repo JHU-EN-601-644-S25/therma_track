@@ -2,6 +2,8 @@
 
 ## Opening web and android app
 
+[clone the main branch]
+
 Web App:
 
 1. run node -v, ensure the current version of node.js >= 20
@@ -23,7 +25,7 @@ Android App (Pure React Native, uses Android Studio Emulator):
 5. npm install react-native-chart-kit (for patient temperature data visualization)
 6. npm install react-native-svg (dependencies for char kit)
 7. cp [dir for React/android_app/*] .
-8. **IMPORTANT** Before starting, use "ipconfig" command to check the laptop networks's currently assigned ip address and change the API_BASE_URL in config_constants.ts. Otherwise the app would not be able to fetch the data!!
+8. **IMPORTANT** Before starting, use "ipconfig" command to check the laptop networks's currently assigned ip address and change the API_BASE_URL in config_constants.ts. Otherwise the app will not be able to fetch the data!!
 9. open Android Studio and run VM device (Recommend Android version 15)
 10. npm run android
 
@@ -38,4 +40,5 @@ Flask cloud backend (Mainly used):
 
 1. cd flask-cloud-server
 2. Create .env file in the flask-cloud-server/
-3. python app.py
+3. pip install requirements.txt
+4. python app.py 
