@@ -6,14 +6,22 @@
 
 Web App:
 ```
-1. run node -v, ensure the current version of node.js >= 20
-2. npm create vite@latest [app name]
-3. when being prompted the framework, choose React + Typescript
-4. cd [app name]
-5. npm install
-6. cp [dir for React/web_app/*] src/
-7. npm install react-router-dom recharts (router is used for navigating between different pages, recharts is used for char display)
-8. npm run dev
+run node -v, ensure the current version of node.js >= 20
+
+npm create vite@latest [app name]
+
+when being prompted the framework, choose React + Typescript
+
+cd [app name]
+
+
+npm install
+
+cp [dir for React/web_app/*] src/
+
+npm install react-router-dom recharts (router is used for navigating between different pages, recharts is used for char display)
+
+npm run dev
 ```
 
 Android App (Pure React Native, uses Android Studio Emulator):
