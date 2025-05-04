@@ -5,6 +5,9 @@
 [clone the main branch]
 
 Web App:
+```
+node -v
+```
 
 1. run node -v, ensure the current version of node.js >= 20
 2. npm create vite@latest [app name]
