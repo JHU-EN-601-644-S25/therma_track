@@ -36,8 +36,11 @@ Flask backend (Local version of app, used for functionality test):
 
 Flask cloud backend (Mainly used):
 1. `cd flask-cloud-server`
-2. Create .env file in the flask-cloud-server/
-3. `pip install -r requirements.txt`
+2. `python3 -m venv local`
+3. `source local/bin/activate` (note: based on the difference in operaing system, this command line may be different. the line shown here is for linux. For winows try `local/Script/Activate`)
+4. use `which python` to check for the current python version, it should be ".....\therma_track\flask-cloud-server\local\...". If it is not, try deactivate and active the environment more times.
+5. `python -m pip install -r requirements.txt`
+6. `cp .env.temp .env`
 4. `python app.py`
 
 **KEY** Alternate between https and http connection
@@ -59,3 +62,4 @@ server: {
 ```
 this will ensure that the front end will use https with the specified certificate
 4. check the web app's src/constant_config.ts file to see whether the data is fetched from "http://localhost" or "https://localhost". Modify accordingly.
+5. **if when loggining in, there is still Database connecton problem**, try to open the cloud server website (should be https://localhost:4000), and when seeing a page that says the website is insecure, clear "advanced" and then "proceed to the page". This will lead to a 404 page, but after that retry the frontend, the connection issue should be resolved.
