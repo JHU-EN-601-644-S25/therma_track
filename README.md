@@ -63,4 +63,4 @@ server: {
 this will ensure that the front end will use https with the specified certificate
 
 4. check the web app's src/constant_config.ts file to see whether the data is fetched from "http://localhost" or "https://localhost". Modify accordingly.
-5. **if when loggining in, there is still Database connecton problem**, try to open the cloud server website (should be https://localhost:4000), and when seeing a page that says the website is insecure, clear "advanced" and then "proceed to the page". This will lead to a 404 page, but after that retry the frontend, the connection issue should be resolved.
+5. **if when loggining in, there is still Database connecton problem**, try to open the cloud server website (should be https://localhost:4000), and when seeing a page that says the website is insecure, click "advanced" and then "proceed to the page". This will lead to a 404 page, but after that retry the frontend, the connection issue should be resolved.
