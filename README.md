@@ -1,7 +1,14 @@
 # Therma_track
 ## Project Overview
 
-Therma Track is a cross-platform temperature monitoring app for patients. It allows users to monitor patient vitals in real-time through both web and mobile applications.
+Therma Track is a cross-platform temperature monitoring app for patients which aligns to the cybersecurity standards of the FDA Class II medical devices. 
+The security of this App is protected via multiple aspects, including data encryption, cloud security, multi-factor authentication, and access control. 
+We have conducted systematic security testings based on the FDA requirements, please check [ThermaTrack_InternalTest](https://github.com/JHU-EN-601-644-S25/ThermaTrack_InternalTest) for the reports.
+
+The basic features are:
+1. allow patients and authorised clinicians to monitor patient data in real-time through both web and mobile applications;
+2. upload patients data to the cloud in real-time;
+3. allow patient and clinician registrations.
 
 ## Opening the Web and Android app
 
