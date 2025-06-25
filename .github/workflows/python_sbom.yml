@@ -1,4 +1,4 @@
-name: Generate SBOM for flask-server
+name: Generate Python SBOM (flask-cloud-server)
 
 on:
   push:
@@ -18,14 +18,14 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install CycloneDX tool
+      - name: Install CycloneDX Python tool
         run: pip install cyclonedx-bom
 
-      - name: Generate CycloneDX SBOM
-        run: cyclonedx-py requirements -i flask-cloud-server/requirements.txt -o sbom.json
+      - name: Generate CycloneDX SBOM from requirements.txt
+        run: cyclonedx-py requirements -i flask-cloud-server/requirements.txt -o flask-cloud-server/sbom.json
 
       - name: Upload SBOM
         uses: actions/upload-artifact@v4
         with:
-          name: sbom
-          path: sbom.json
+          name: sbom-python
+          path: flask-cloud-server/sbom.json
